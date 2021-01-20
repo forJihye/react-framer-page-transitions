@@ -20,7 +20,7 @@ const Header = () =>{
 }
 
 const Footer = () => {
-  return <footer className="w-full bg-gray-200">
+  return <footer className="w-full bg-gray-100">
     <div className="lg:container mx-auto px-5 py-4 text-center">
       footer.
     </div>

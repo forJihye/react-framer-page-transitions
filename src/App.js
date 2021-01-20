@@ -7,19 +7,20 @@ import Main from "./pages/Main";
 function App() {
   const location = useLocation();
   const history = useHistory();
-  const [isFirstMount, setIsFirstMount] = useState(true);
+  // const [isFirstMount, setIsFirstMount] = useState(true);
 
-  useEffect(() => {
-    const unlisten = history.listen(() => {
-      isFirstMount && setIsFirstMount(false)
-    });
-    return unlisten;
-  }, [history, isFirstMount]);
+  // useEffect(() => {
+  //   const unlisten = history.listen(() => {
+  //     isFirstMount && setIsFirstMount(false)
+  //   });
+  //   return unlisten;
+  // }, [history, isFirstMount]);
 
   return <>
     <AnimatePresence exitBeforeEnter>
       <Switch location={location} key={location.pathname}>
-        <Route path='/' exact component={(props) => <Main isFirstMount={isFirstMount} {...props}  />} />
+        {/* <Route path='/' exact component={(props) => <Main isFirstMount={isFirstMount} {...props}  />} /> */}
+        <Route path='/' exact component={Main} />
         <Route path='/contact' component={Contact} />
       </Switch>
     </AnimatePresence>
