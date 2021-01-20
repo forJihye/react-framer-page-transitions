@@ -1,24 +1,26 @@
 import { AnimatePresence } from "framer-motion";
-import { Route, Switch, useLocation } from "react-router-dom";
-import Blog from "./components/Blog";
-import Header from "./components/Header";
-import Main from "./components/Main";
-import InitialTransition from './components/InitialTransition';
 import { useEffect, useState } from "react";
+import { Route, Switch, useHistory, useLocation } from "react-router-dom";
+import Contact from "./pages/Contact";
+import Main from "./pages/Main";
 
 function App() {
   const location = useLocation();
-  const [isFirstMount, setIsFirstMount] = useState(false);
+  const history = useHistory();
+  const [isFirstMount, setIsFirstMount] = useState(true);
+
   useEffect(() => {
-    setIsFirstMount(true)
-  }, []);
+    const unlisten = history.listen(() => {
+      isFirstMount && setIsFirstMount(false)
+    });
+    return unlisten;
+  }, [history, isFirstMount]);
+
   return <>
-    {isFirstMount && <InitialTransition />}
     <AnimatePresence exitBeforeEnter>
-      <Header />
       <Switch location={location} key={location.pathname}>
-        <Route path='/' exact component={Main} />
-        <Route path='/blog' component={Blog} />
+        <Route path='/' exact component={(props) => <Main isFirstMount={isFirstMount} {...props}  />} />
+        <Route path='/contact' component={Contact} />
       </Switch>
     </AnimatePresence>
   </>;
