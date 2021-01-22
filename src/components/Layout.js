@@ -12,7 +12,7 @@ const Header = () =>{
     <div className="lg:container mx-auto flex justify-center items-center">
       <img src={logo} alt="react" style={{height: 60}} />
       <nav className="flex-1 flex flex-row space-x-4">
-        <NavLink to="/">blog</NavLink>
+        <NavLink to="/">Main</NavLink>
         <NavLink to="/contact">contact</NavLink>
       </nav>
     </div>
@@ -30,9 +30,7 @@ const Footer = () => {
 const Layout = ({children}) => {
   return <div className="flex flex-col min-h-screen">
     <Header />
-    <main className="flex-1">
-      {children}
-    </main>
+    <main className="flex-1">{children}</main>
     <Footer />
   </div>
 }

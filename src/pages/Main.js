@@ -1,13 +1,13 @@
-import axios from 'axios';
 import { motion } from "framer-motion"
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import styled from 'styled-components';
+import FadeMotion from '../components/FadeMotion';
 import Layout from '../components/Layout';
 import Photo from '../components/Photo';
-import FadeMotion from '../components/FadeMotion';
-import InitialTransition from '../components/InitialTransition';
+import Landing from '../components/Landing';
+import {useAsync} from '../utils';
 
-const GridPhotos = styled.div`
+const StyledGrid = styled.div`
   display: grid;
   grid-template-columns: repeat(5, 1fr);
   grid-gap: 15px;
@@ -19,12 +19,11 @@ const GridPhotos = styled.div`
   }
 `;
 
-const section = (isFirstMount) => ({
+const postsSection = (isLanding) => ({
   animate: {
     transition: { 
       staggerChildren: 0.1, 
-      delayChildren: 0 
-      // delayChildren: isFirstMount ? 2.8 : 0 
+      delayChildren: isLanding ? 2.8 : 0 
     },
   },
 });
@@ -50,33 +49,37 @@ const contents = {
     y: 0,
     opacity: 1,
     transition: {
-      duration: 0.9,
-      delay: 0.4,
+      duration: 0.7,
       ease: [0.6, -0.05, 0.01, 0.99],
     },
   }
 }
-const Main = () => {
-  const [photos, setPhotos] = useState([]);
 
-  useEffect(() => {
-    (async() => {
-      const {data} = await axios.get('https://jsonplaceholder.typicode.com/photos?_limit=10');
-      setPhotos(data);
-    })();
-  }, []);
+const Posts = () => {
+  const [data, loading] = useAsync('https://jsonplaceholder.typicode.com/photos?_limit=10');
+  return <>
+    {loading
+    ? <div style={{textAlign: 'center'}}>로딩 중...</div>
+    : <StyledGrid>{data.map((photo, i) => <Photo key={`photo-${i}`} photo={photo} index={i} />)}</StyledGrid>
+    }
+  </>
+}
 
+const Main = ({isLanding}) => {
   return <Layout>
     <FadeMotion>
-      {/* <InitialTransition /> */}
-      <motion.section animate="animate" initial="initial" className="lg:container mx-auto">
+      {isLanding && <Landing />}
+      <motion.div 
+        initial="initial" 
+        animate="animate" 
+        variants={postsSection(isLanding)} 
+        className="lg:container mx-auto"
+      >
         <motion.h1 variants={title} className="relative text-4xl text-center font-bold font-mono mt-10">My Photos</motion.h1>
         <motion.div variants={contents}>
-          {photos.length 
-          ? <GridPhotos>{photos.map((photo, i) => <Photo key={`photo-${i}`} photo={photo} />)}</GridPhotos>
-          : <div style={{textAlign: 'center'}}>로딩 중...</div>}
+          <Posts />
         </motion.div>
-      </motion.section>
+      </motion.div>
     </FadeMotion>
   </Layout>
 }
